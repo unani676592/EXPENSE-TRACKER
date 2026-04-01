@@ -4,6 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import Input from "../../components/input/input";
 import { validateEmail } from "../../utils/Helper";
 import ProfilePhotoSelector from "../../components/input/ProfilePhotoSelector";
+import { useUser } from "../../context/UserContext";
 
 const Signup = () => {
   const [profilePic, setProfilePic] = useState(null);
@@ -13,6 +14,7 @@ const Signup = () => {
   const [error, setError] = useState(null);
 
   const navigate = useNavigate();
+  const { updateUser } = useUser();
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -33,6 +35,15 @@ const Signup = () => {
     }
 
     setError("");
+    const userData = {
+      fullName,
+      email,
+      profilePic: profilePic || "",
+    };
+
+    localStorage.setItem("token", "demo-token");
+    localStorage.setItem("user", JSON.stringify(userData));
+    updateUser(userData);
     navigate("/dashboard");
   };
 

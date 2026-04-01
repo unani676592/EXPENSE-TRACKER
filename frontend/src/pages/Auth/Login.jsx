@@ -3,6 +3,7 @@ import AuthLayout from "../../components/layouts/AuthLayout";
 import { useNavigate, Link } from "react-router-dom";
 import Input from "../../components/input/input";
 import { validateEmail } from "../../utils/Helper.js";
+import { useUser } from "../../context/UserContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -10,6 +11,8 @@ const Login = () => {
   const [error, setError] = useState(null);
 
   const navigate = useNavigate();
+  const { updateUser } = useUser();
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -24,6 +27,18 @@ const Login = () => {
     }
 
     setError("");
+    const savedUser = localStorage.getItem("user");
+    const parsedSavedUser = savedUser ? JSON.parse(savedUser) : null;
+
+    const userData = parsedSavedUser || {
+      name: email.split("@")[0],
+      email,
+      profilePic: "",
+    };
+
+    localStorage.setItem("token", "demo-token");
+    localStorage.setItem("user", JSON.stringify(userData));
+    updateUser(userData);
     navigate("/dashboard");
   };
 
